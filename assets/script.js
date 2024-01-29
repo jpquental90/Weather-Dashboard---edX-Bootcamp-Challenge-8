@@ -1,4 +1,30 @@
 let searchForm = $('#search-form');
+let historyPanel = $('.list-group');
+
+function loadSavedCities() {
+    let savedCities = JSON.parse(localStorage.getItem('savedCities')) || [];
+    savedCities.forEach(city => addCityButton(city));
+}
+
+function addCityButton(city) {
+    let button = $('<button>').text(city).addClass('city-button');
+    historyPanel.append(button);
+    button.on('click', function () {
+        $('#search-input').val(city);
+        searchForm.submit();
+    });
+}
+
+function saveCity(city) {
+    let savedCities = JSON.parse(localStorage.getItem('savedCities')) || [];
+
+    if (!savedCities.includes(city)) {
+        savedCities.push(city);
+        localStorage.setItem('savedCities', JSON.stringify(savedCities));
+        addCityButton(city);
+    }
+}
+
 
 function kelvinToCelsius(kelvin) {
     return kelvin - 273.15;
@@ -12,20 +38,7 @@ function formatUnixTimestamp(unixTimestamp) {
     return `${day}/${month}/${year}`;
 }
 
-function submitSearch (event) {
-    event.preventDefault();
-    let search = $('#search-input').val().trim();
-    console.log(search);
-
-    let weatherKey = 'bf1c320ceaab99952592bf850ff3e6d2';
-    let queryURL = 'https://api.openweathermap.org/data/2.5/forecast?q=' + search + '&appid=' + weatherKey;
-
-    fetch(queryURL)
-    .then(function (response) {
-        return response.json();
-    })
-    .then(function (data) {
-        console.log("Weather Data:", data);
+function displayWeatherInfo(data) {
 
         let currentWeather = $('#today');
 
@@ -61,8 +74,31 @@ function submitSearch (event) {
         let humidityData = data.list[0].main.humidity;
         let currentHumidity = $('<p>').text('Humidity: ' + humidityData + '%')
         currentWeather.append(currentHumidity);
-    })
 }
+
+function submitSearch(event) {
+    event.preventDefault();
+    let search = $('#search-input').val().trim();
+    console.log(search);
+
+    let weatherKey = 'bf1c320ceaab99952592bf850ff3e6d2';
+    let queryURL = 'https://api.openweathermap.org/data/2.5/forecast?q=' + search + '&appid=' + weatherKey;
+
+    fetch(queryURL)
+        .then(response => response.json())
+        .then(data => {
+            console.log("Weather Data:", data);
+
+            displayWeatherInfo(data);
+
+            saveCity(search);
+        })
+        .catch(error => {
+            console.error('Error fetching weather data:', error);
+        });
+}
+
+loadSavedCities();
 
 searchForm.submit(submitSearch);
 
