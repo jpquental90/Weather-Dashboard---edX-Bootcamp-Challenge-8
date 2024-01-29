@@ -46,8 +46,7 @@ h1 {
 /* Bottom right panel - weather forecast for next 5 days */
 
 #forecast {
-    background-color: blueviolet;
-    height: 200px;
+    height: auto;
     width: 100%;
     margin-left: 0;
 }
@@ -55,12 +54,13 @@ h1 {
 .forecast-card {
     border: 1px solid black;
     margin: 5px; 
+    color: white;
+    background-color: #0c3650;
 }
 
-/* .forecast-title {
-    height: 30px;
-    margin-bottom: 0;
-} */
+.forecast-title {
+    font-weight: 650;
+}
 
 /* Bottom left panel - history display */
 .clear-button {

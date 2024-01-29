@@ -100,18 +100,24 @@ $(document).ready(function () {
             const forecastTemperatureKelvin = forecastData.main.temp;
             const forecastTemperatureCelsius = kelvinToCelsius(forecastTemperatureKelvin);
 
-let iconCodeForecast = forecastData.weather[0].icon; // Use the correct index here
+            let iconCodeForecast = forecastData.weather[0].icon; 
 
-            let iconUrlForecast = `http://openweathermap.org/img/wn/${iconCodeForecast}.png`; // Create a new URL for each forecast day
+            let iconUrlForecast = `http://openweathermap.org/img/wn/${iconCodeForecast}.png`;
 
             let forecastCard = $('<div>').addClass('col-md-2 forecast-card card-body');
-            let forecastDateElement = $('<h5>').text(forecastDate);
+            let forecastDateElement = $('<h5>').text(forecastDate).css('font-weight', '700');
 
-            let weatherIconForecast = $('<img>').attr('src', iconUrlForecast).attr('alt', 'Weather Icon'); // Use the new URL
+            let weatherIconForecast = $('<img>').attr('src', iconUrlForecast).attr('alt', 'Weather Icon');
 
             let forecastTemperatureElement = $('<p>').text('Temp.: ' + forecastTemperatureCelsius.toFixed(2) + '°C');
 
-            forecastCard.append(forecastDateElement, weatherIconForecast, forecastTemperatureElement);
+            let forecastWindData = forecastData.wind.speed;
+            let forecastWindElement = $('<p>').text('Wind: ' + forecastWindData + ' KPH');
+
+            let forecastHumidityData = forecastData.main.humidity;
+            let forecastHumidityElement = $('<p>').text('Humidity: ' + forecastHumidityData + '%');
+
+            forecastCard.append(forecastDateElement, weatherIconForecast, forecastTemperatureElement, forecastWindElement, forecastHumidityElement);
             forecastSection.append(forecastCard);
 
             forecastDaysAdded++;
