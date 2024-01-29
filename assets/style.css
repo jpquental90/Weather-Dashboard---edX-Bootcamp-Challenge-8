@@ -1,0 +1,36 @@
+.bg-gradient {
+    background: linear-gradient(to right, #5c63e9, #01036c) !important; 
+}
+
+h1 {
+    font-weight: 650;
+}
+
+#form-heading {
+    font-weight: 650;
+}
+
+.weather-search {
+    width: 100%;
+    height: 45px;
+    margin-bottom: 15px;
+    border: 2px solid rgb(188, 185, 185);
+}
+
+.list-group {
+    background-color: blue;
+    height: 200px;
+}
+
+#today {
+    background-color: aqua;
+    height: 200px;
+    width: 100%;
+}
+
+#forecast {
+    background-color: blueviolet;
+    height: 200px;
+    width: 100%;
+    margin-left: 0;
+}
