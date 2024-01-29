@@ -23,9 +23,15 @@ h1 {
 }
 
 #today {
-    background-color: aqua;
-    height: 200px;
+    border: 1px solid black;
+    height: 190px;
     width: 100%;
+    padding: 10px;
+}
+
+#today h2 {
+    font-weight: 650;
+    padding-bottom: 10px;
 }
 
 #forecast {
