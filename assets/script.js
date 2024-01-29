@@ -83,8 +83,8 @@ $(document).ready(function () {
         let currentHumidity = $('<p>').text('Humidity: ' + humidityData + '%');
         todaySection.append(currentHumidity);
         
-    // Add the "5-day Forecast" title directly to the forecast section
-    const forecastTitle = $('<h4>').text("5-day Forecast:");
+
+    const forecastTitle = $('<h4>').text("5-day Forecast:").addClass('forecast-title');
     forecastSection.append(forecastTitle);
 
     let forecastDaysAdded = 0;
@@ -100,11 +100,18 @@ $(document).ready(function () {
             const forecastTemperatureKelvin = forecastData.main.temp;
             const forecastTemperatureCelsius = kelvinToCelsius(forecastTemperatureKelvin);
 
+let iconCodeForecast = forecastData.weather[0].icon; // Use the correct index here
+
+            let iconUrlForecast = `http://openweathermap.org/img/wn/${iconCodeForecast}.png`; // Create a new URL for each forecast day
+
             let forecastCard = $('<div>').addClass('col-md-2 forecast-card card-body');
             let forecastDateElement = $('<h5>').text(forecastDate);
+
+            let weatherIconForecast = $('<img>').attr('src', iconUrlForecast).attr('alt', 'Weather Icon'); // Use the new URL
+
             let forecastTemperatureElement = $('<p>').text('Temp.: ' + forecastTemperatureCelsius.toFixed(2) + '°C');
 
-            forecastCard.append(forecastDateElement, forecastTemperatureElement);
+            forecastCard.append(forecastDateElement, weatherIconForecast, forecastTemperatureElement);
             forecastSection.append(forecastCard);
 
             forecastDaysAdded++;
