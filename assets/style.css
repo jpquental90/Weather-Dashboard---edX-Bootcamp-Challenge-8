@@ -17,11 +17,6 @@ h1 {
     border: 2px solid rgb(188, 185, 185);
 }
 
-.list-group {
-    background-color: blue;
-    height: 200px;
-}
-
 #today {
     border: 1px solid black;
     height: 190px;
@@ -43,4 +38,13 @@ h1 {
 
 .title-container {
     display: flex;
+}
+
+.clear-button {
+    color: white;
+}
+
+.city-button {
+    width: 100%;
+    margin-top: 20px;
 }
