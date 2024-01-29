@@ -1,18 +1,27 @@
 let searchForm = $('#search-form');
 
-searchForm.submit(submitSearch);
-
 function submitSearch (event) {
     event.preventDefault();
-    let city = $('#search-input').val().trim();
-    console.log(city);
+    let search = $('#search-input').val().trim();
+    console.log(search);
 
-    let APIKey = "ec65626f17967dd632fbed28f71be01e";
-    
-    let queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid" + APIKey;
+    let weatherKey = 'bf1c320ceaab99952592bf850ff3e6d2';
+    let queryURL = 'https://api.openweathermap.org/data/2.5/forecast?q=' + search + '&appid=' + weatherKey;
+
+    fetch(queryURL)
+    .then(function (response) {
+        return response.json();
+    })
+    .then(function (data) {
+        console.log("Weather Data:", data);
+        let currentWeather = $('#today');
+        let cityName = data.city.name;
+        console.log(cityName);
+        let titleCity = $('<h2>').text(cityName);
+    })
 }
 
-
+searchForm.submit(submitSearch);
 
 
 
