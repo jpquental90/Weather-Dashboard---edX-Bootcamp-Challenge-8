@@ -28,11 +28,24 @@ function submitSearch (event) {
         console.log("Weather Data:", data);
 
         let currentWeather = $('#today');
+
         let cityName = data.city.name;
         console.log(cityName);
+
         let currentDate = formatUnixTimestamp(data.list[0].dt);
+
+        let iconCode = data.list[0].weather[0].icon;
+        let iconUrl = `http://openweathermap.org/img/wn/${iconCode}.png`;
+
+        let titleContainer = $('<div>').addClass('title-container');
+
         let titleCity = $('<h2>').text(cityName + ' (' + currentDate + ')');
-        currentWeather.append(titleCity);
+        titleContainer.append(titleCity);
+
+        let weatherIcon = $('<img>').attr('src', iconUrl).attr('alt', 'Weather Icon');
+        titleContainer.append(weatherIcon);
+
+        currentWeather.append(titleContainer);
 
         let tempDataKelvin = data.list[0].main.temp;
         let tempDataCelsius = kelvinToCelsius(tempDataKelvin);
