@@ -5,7 +5,7 @@ $(document).ready(function () {
     let cityButtonsContainer = $('<div>').addClass('city-buttons-container');
     let searchInput = $('#search-input');
     let todaySection = $('#today');
-    let forecastSection = $('.forecast-container');
+    let forecastSection = $('#forecast');
 
     function loadSavedCities() {
         let savedCities = JSON.parse(localStorage.getItem('savedCities')) || [];
@@ -83,42 +83,35 @@ $(document).ready(function () {
         let currentHumidity = $('<p>').text('Humidity: ' + humidityData + '%');
         todaySection.append(currentHumidity);
         
-        forecastSection.empty();
-        let forecastDaysAdded = 0;
+    // Add the "5-day Forecast" title directly to the forecast section
+    const forecastTitle = $('<h4>').text("5-day Forecast:");
+    forecastSection.append(forecastTitle);
 
-        const nextDay = new Date(data.list[0].dt * 1000);
-        nextDay.setDate(nextDay.getDate() + 1);
+    let forecastDaysAdded = 0;
 
-        // Create a container for the forecast title and cards
-        const forecastContainer = $('<div>').addClass('forecast-container');
+    const nextDay = new Date(data.list[0].dt * 1000);
+    nextDay.setDate(nextDay.getDate() + 1);
 
-        // Add the "5-day Forecast" title to the container
-        const forecastTitle = $('<h4>').text("5-day Forecast:");
-        $('#forecast').prepend(forecastTitle);
+    for (let i = 0; i < data.list.length && forecastDaysAdded < 5; i++) {
+        const forecastData = data.list[i];
+        const forecastDate = formatUnixTimestamp(forecastData.dt);
 
-        for (let i = 0; i < data.list.length && forecastDaysAdded < 5; i++) {
-            const forecastData = data.list[i];
-            const forecastDate = formatUnixTimestamp(forecastData.dt);
+        if (forecastDate === formatUnixTimestamp(nextDay.getTime() / 1000)) {
+            const forecastTemperatureKelvin = forecastData.main.temp;
+            const forecastTemperatureCelsius = kelvinToCelsius(forecastTemperatureKelvin);
 
-            if (forecastDate === formatUnixTimestamp(nextDay.getTime() / 1000)) {
-                const forecastTemperatureKelvin = forecastData.main.temp;
-                const forecastTemperatureCelsius = kelvinToCelsius(forecastTemperatureKelvin);
+            let forecastCard = $('<div>').addClass('col-md-2 forecast-card card-body');
+            let forecastDateElement = $('<h5>').text(forecastDate);
+            let forecastTemperatureElement = $('<p>').text('Temp.: ' + forecastTemperatureCelsius.toFixed(2) + '°C');
 
-                let forecastCard = $('<div>').addClass('col-md-2 forecast-card card-body');
-                let forecastDateElement = $('<h5>').text(forecastDate);
-                let forecastTemperatureElement = $('<p>').text('Temp.: ' + forecastTemperatureCelsius.toFixed(2) + '°C');
+            forecastCard.append(forecastDateElement, forecastTemperatureElement);
+            forecastSection.append(forecastCard);
 
-                forecastCard.append(forecastDateElement, forecastTemperatureElement);
-                forecastContainer.append(forecastCard);
-
-                forecastDaysAdded++;
-                nextDay.setDate(nextDay.getDate() + 1);
-            }
+            forecastDaysAdded++;
+            nextDay.setDate(nextDay.getDate() + 1);
         }
-
-        // Append the forecast container to the forecast section
-        forecastSection.append(forecastContainer);
     }
+}
 
     function submitSearch(event) {
         event.preventDefault();

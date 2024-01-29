@@ -2,9 +2,15 @@
     background: linear-gradient(to right, #5c63e9, #01036c) !important; 
 }
 
+
+/* Title of the page */
+
 h1 {
     font-weight: 650;
 }
+
+
+/* Search function */
 
 #form-heading {
     font-weight: 650;
@@ -16,6 +22,9 @@ h1 {
     margin-bottom: 15px;
     border: 2px solid rgb(188, 185, 185);
 }
+
+
+/* Top right panel - current weather */
 
 #today {
     border: 1px solid black;
@@ -33,6 +42,9 @@ h1 {
     display: flex;
 }
 
+
+/* Bottom right panel - weather forecast for next 5 days */
+
 #forecast {
     background-color: blueviolet;
     height: 200px;
@@ -40,22 +52,13 @@ h1 {
     margin-left: 0;
 }
 
-
-.forecast-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
 .forecast-card {
     border: 1px solid black;
     margin: 5px; 
 }
 
-/* .forecastTitle {
-width: 100%;
-} */
 
+/* Bottom left panel - history display */
 .clear-button {
     color: white;
 }
