@@ -71,3 +71,12 @@ h1 {
     width: 100%;
     margin-top: 18px;
 }
+
+.city-button:hover {
+    background-color: rgb(223, 224, 228) !important;
+}
+
+.clear-button:hover {
+    color: white;
+    background-color: rgb(75, 75, 75) !important;
+}
