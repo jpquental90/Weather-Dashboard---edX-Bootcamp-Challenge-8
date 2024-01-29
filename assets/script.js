@@ -18,16 +18,27 @@ function submitSearch (event) {
     })
     .then(function (data) {
         console.log("Weather Data:", data);
+
         let currentWeather = $('#today');
         let cityName = data.city.name;
         console.log(cityName);
         let titleCity = $('<h2>').text(cityName);
         currentWeather.append(titleCity);
+
         let tempDataKelvin = data.list[0].main.temp;
         let tempDataCelsius = kelvinToCelsius(tempDataKelvin);
         console.log(tempDataCelsius);
         let currentTemperature = $('<p>').text("Temp.: " + tempDataCelsius.toFixed(2) + "°C")
         currentWeather.append(currentTemperature);
+
+        let windData = data.list[0].wind.speed;
+        let currentWind = $('<p>').text("Wind: " + windData + " KPH")
+        console.log(currentWind);
+        currentWeather.append(currentWind);
+
+        let humidityData = data.list[0].main.humidity;
+        let currentHumidity = $('<p>').text("Humidity: " + humidityData + "%")
+        currentWeather.append(currentHumidity);
     })
 }
 
