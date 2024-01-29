@@ -1,5 +1,9 @@
 let searchForm = $('#search-form');
 
+function kelvinToCelsius(kelvin) {
+    return kelvin - 273.15;
+}
+
 function submitSearch (event) {
     event.preventDefault();
     let search = $('#search-input').val().trim();
@@ -18,6 +22,12 @@ function submitSearch (event) {
         let cityName = data.city.name;
         console.log(cityName);
         let titleCity = $('<h2>').text(cityName);
+        currentWeather.append(titleCity);
+        let tempDataKelvin = data.list[0].main.temp;
+        let tempDataCelsius = kelvinToCelsius(tempDataKelvin);
+        console.log(tempDataCelsius);
+        let currentTemperature = $('<p>').text("Temp.: " + tempDataCelsius.toFixed(2) + "°C")
+        currentWeather.append(currentTemperature);
     })
 }
 
