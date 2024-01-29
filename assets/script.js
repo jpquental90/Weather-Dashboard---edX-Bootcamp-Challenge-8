@@ -3,6 +3,7 @@ $(document).ready(function () {
     let historyPanel = $('.list-group');
     let clearHistoryButton = $('<button>').text("Clear history").addClass('clear-button btn bg-dark');
     let cityButtonsContainer = $('<div>').addClass('city-buttons-container');
+    let searchInput = $('#search-input');
 
     function loadSavedCities() {
         let savedCities = JSON.parse(localStorage.getItem('savedCities')) || [];
@@ -10,6 +11,9 @@ $(document).ready(function () {
     }
 
     function addCityButton(cityName) {
+
+        cityName = cityName.charAt(0).toUpperCase() + cityName.slice(1);
+
         let button = $('<button>').text(cityName).addClass('city-button btn bg-dark-subtle');
 
         if (!cityButtonsContainer.find(`button:contains("${cityName}")`).length) {
@@ -103,6 +107,8 @@ $(document).ready(function () {
                 displayWeatherInfo(data);
 
                 saveCity(search);
+
+                searchInput.val('');
             })
             .catch(error => {
                 console.error('Error fetching weather data:', error);
