@@ -10,77 +10,68 @@ $(document).ready(function () {
     let forecastSection = $('#forecast');
 
 // Function to load saved cities from local storage, no more than 5 in total
-function loadSavedCities() {
-    let savedCities = JSON.parse(localStorage.getItem('savedCities')) || [];
+    function loadSavedCities() {
+        let savedCities = JSON.parse(localStorage.getItem('savedCities')) || [];
 
-    // Clear existing buttons
-    cityButtonsContainer.empty();
+        cityButtonsContainer.empty();
 
-    // Iterate over savedCities in normal order
-    for (let i = 0; i < savedCities.length; i++) {
-        let cityName = savedCities[i].name;
+        for (let i = 0; i < savedCities.length; i++) {
+            let cityName = savedCities[i].name;
 
-        // Add the button
-        addCityButton(cityName);
+            addCityButton(cityName);
 
-        // Check if the number of buttons exceeds 5
-        if (cityButtonsContainer.children().length >= 5) {
-            // Break the loop if 5 buttons are added
-            break;
+            if (cityButtonsContainer.children().length >= 5) {
+                break;
+            }
         }
     }
-}
 
 // Function to generate and add a button with the name of the city
 // Remove the oldest button if more than 5 buttons are present
-function addCityButton(cityName) {
-    let button = $('<button>').text(cityName).addClass('city-button btn bg-dark-subtle');
+    function addCityButton(cityName) {
+        let button = $('<button>').text(cityName).addClass('city-button btn bg-dark-subtle');
 
-    // Check if the button already exists
-    if (!cityButtonsContainer.find(`button:contains("${cityName}")`).length) {
-        // Check if the number of buttons exceeds 5
-        if (cityButtonsContainer.children().length >= 5) {
-            // Remove the oldest button
-            cityButtonsContainer.children().last().remove();
+        if (!cityButtonsContainer.find(`button:contains("${cityName}")`).length) {
+
+            if (cityButtonsContainer.children().length >= 5) {
+                cityButtonsContainer.children().last().remove();
+            }
+
+            cityButtonsContainer.append(button);
+            button.on('click', function () {
+                $('#search-input').val(cityName);
+                searchForm.submit();
+            });
         }
-
-        // Add the new button at the beginning of the list
-        cityButtonsContainer.append(button);
-        button.on('click', function () {
-            $('#search-input').val(cityName);
-            searchForm.submit();
-        });
     }
-}
 
+// Function to save the user searches in local storage
     function saveCity(city) {
         let savedCities = JSON.parse(localStorage.getItem('savedCities')) || [];
     
-        // Remove any existing instance of the city
         savedCities = savedCities.filter(savedCity => savedCity.name !== city);
     
-        // Add the new city at the beginning of the list
         savedCities.unshift({ name: city });
-    
-        // Limit the list to 5 cities
+
         savedCities = savedCities.slice(0, 5);
     
-        // Update the local storage
         localStorage.setItem('savedCities', JSON.stringify(savedCities));
     
-        // Refresh the list of buttons
         loadSavedCities();
     }
 
+// Function to clear city search history (to be called when a button is clicked)
     function clearHistory() {
         cityButtonsContainer.empty();
         localStorage.removeItem('savedCities');
     }
 
+// Function to convert the temperature displayed in the weather API object to Celsius
     function kelvinToCelsius(kelvin) {
         return kelvin - 273.15;
     }
 
+// Function to convert the UNIX timestamp into human-readable date string in the format "DD/MM/YYYY"
     function formatUnixTimestamp(unixTimestamp) {
         let date = new Date(unixTimestamp * 1000);
         let year = date.getFullYear();
@@ -89,6 +80,7 @@ function addCityButton(cityName) {
         return `${day}/${month}/${year}`;
     }
 
+// Function to display the weather information (today's weather and 5 days forecast), using data from the weather API
     function displayWeatherInfo(data) {
         todaySection.empty();
         let cityName = data.city.name; 
@@ -168,6 +160,7 @@ function addCityButton(cityName) {
         }
     }
 
+// Function to allow user to submit a search using the text input field, linking this with the weather API and calling of the displayWeatherInfo function
     function submitSearch(event) {
         event.preventDefault();
         let search = $('#search-input').val().trim();
@@ -190,12 +183,15 @@ function addCityButton(cityName) {
             });
     }
 
+// Calling functions of loadSavedCities and submitSearch (the latter upon submitting the search term in the input field)
     loadSavedCities();
 
     searchForm.submit(submitSearch);
 
+// Adding the search and clear buttons to the history panel
     historyPanel.append(clearHistoryButton);
     historyPanel.append(cityButtonsContainer);
 
+// Clear history upon click of the button (I added this to help with the app development, but decided it could be left as another potentially useful functionality for the user)
     clearHistoryButton.on('click', clearHistory);
 });
