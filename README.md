@@ -1,7 +1,7 @@
 # Weather-Dashboard---edX-Bootcamp-Challenge-8
 5 day city weather forecast
 
-This repository contains my answer to the Module 8 Challenge of the Web Development edX bootcamp: https://jpquental90.github.io/Daily-Planner-App---edX-Bootcamp-Challenge-7/
+This repository contains my answer to the Module 8 Challenge of the Web Development edX bootcamp: https://jpquental90.github.io/Weather-Dashboard---edX-Bootcamp-Challenge-8/
 
 ## Description
 

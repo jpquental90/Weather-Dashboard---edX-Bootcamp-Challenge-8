@@ -1,9 +1,8 @@
+/* Header styles */
+
 .bg-gradient {
     background: linear-gradient(to right, #5c63e9, #01036c) !important; 
 }
-
-
-/* Title of the page */
 
 h1 {
     font-weight: 650;
