@@ -81,83 +81,83 @@ $(document).ready(function () {
     }
 
 // Function to display the weather information (today's weather and 5 days forecast), using data from the weather API
-    function displayWeatherInfo(data) {
-        todaySection.empty();
-        let cityName = data.city.name; 
+function displayWeatherInfo(data) {
+    let cityName = data.city.name; 
 
-        saveCity(cityName);
+    saveCity(cityName);
 
-        let currentDate = formatUnixTimestamp(data.list[0].dt);
-        let iconCode = data.list[0].weather[0].icon;
-        let iconUrl = `http://openweathermap.org/img/wn/${iconCode}.png`;
+    let currentDate = formatUnixTimestamp(data.list[0].dt);
+    let iconCode = data.list[0].weather[0].icon;
+    let iconUrl = `http://openweathermap.org/img/wn/${iconCode}.png`;
 
-        let titleContainer = $('<div>').addClass('title-container');
-        let titleCity = $('<h3>').text(cityName + ' (' + currentDate + ')');
-        titleContainer.append(titleCity);
+    let titleContainer = $('<div>').addClass('title-container');
+    let titleCity = $('<h3>').text(cityName + ' (' + currentDate + ')');
+    titleContainer.append(titleCity);
 
-        let weatherIcon = $('<img>').attr('src', iconUrl).attr('alt', 'Weather Icon');
-        titleContainer.append(weatherIcon);
+    let weatherIcon = $('<img>').attr('src', iconUrl).attr('alt', 'Weather Icon');
+    titleContainer.append(weatherIcon);
 
-        todaySection.append(titleContainer);
+    todaySection.empty();  // Clear previous content
+    todaySection.append(titleContainer);
 
-        let tempDataKelvin = data.list[0].main.temp;
-        let tempDataCelsius = kelvinToCelsius(tempDataKelvin);
-        let currentTemperature = $('<p>').text('Temp.: ' + tempDataCelsius.toFixed(2) + '°C');
-        todaySection.append(currentTemperature);
+    let tempDataKelvin = data.list[0].main.temp;
+    let tempDataCelsius = kelvinToCelsius(tempDataKelvin);
+    let currentTemperature = $('<p>').text('Temp.: ' + tempDataCelsius.toFixed(2) + '°C');
+    todaySection.append(currentTemperature);
 
-        let windData = data.list[0].wind.speed;
-        let currentWind = $('<p>').text('Wind: ' + windData + ' KPH');
-        todaySection.append(currentWind);
+    let windData = data.list[0].wind.speed;
+    let currentWind = $('<p>').text('Wind: ' + windData + ' KPH');
+    todaySection.append(currentWind);
 
-        let humidityData = data.list[0].main.humidity;
-        let currentHumidity = $('<p>').text('Humidity: ' + humidityData + '%');
-        todaySection.append(currentHumidity);
+    let humidityData = data.list[0].main.humidity;
+    let currentHumidity = $('<p>').text('Humidity: ' + humidityData + '%');
+    todaySection.append(currentHumidity);
 
-        todaySection.css('border', '1px solid black')
+    todaySection.css('border', '1px solid black')
 
-        forecastSection.empty();
+    forecastSection.empty();  // Clear previous content
 
-        const forecastTitle = $('<h4>').text('5-day Forecast:').addClass('forecast-title');
-        forecastSection.append(forecastTitle);
+    const forecastTitle = $('<h4>').text('5-day Forecast:').addClass('forecast-title');
+    forecastSection.append(forecastTitle);
 
-        let forecastDaysAdded = 0;
+    let forecastDaysAdded = 0;
 
-        const nextDay = new Date(data.list[0].dt * 1000);
-        nextDay.setDate(nextDay.getDate() + 1);
+    const nextDay = new Date(data.list[0].dt * 1000);
+    nextDay.setDate(nextDay.getDate() + 1);
 
-        for (let i = 0; i < data.list.length && forecastDaysAdded < 5; i++) {
-            const forecastData = data.list[i];
-            const forecastDate = formatUnixTimestamp(forecastData.dt);
+    for (let i = 0; i < data.list.length && forecastDaysAdded < 5; i++) {
+        const forecastData = data.list[i];
+        const forecastDate = formatUnixTimestamp(forecastData.dt);
 
-            if (forecastDate === formatUnixTimestamp(nextDay.getTime() / 1000)) {
-                const forecastTemperatureKelvin = forecastData.main.temp;
-                const forecastTemperatureCelsius = kelvinToCelsius(forecastTemperatureKelvin);
+        if (forecastDate === formatUnixTimestamp(nextDay.getTime() / 1000)) {
+            const forecastTemperatureKelvin = forecastData.main.temp;
+            const forecastTemperatureCelsius = kelvinToCelsius(forecastTemperatureKelvin);
 
-                let iconCodeForecast = forecastData.weather[0].icon;
+            let iconCodeForecast = forecastData.weather[0].icon;
 
-                let iconUrlForecast = `http://openweathermap.org/img/wn/${iconCodeForecast}.png`;
+            let iconUrlForecast = `http://openweathermap.org/img/wn/${iconCodeForecast}.png`;
 
-                let forecastCard = $('<div>').addClass('col-md-2 forecast-card card-body');
-                let forecastDateElement = $('<h5>').text(forecastDate).css('font-weight', '700');
+            let forecastCard = $('<div>').addClass('col-md-2 forecast-card card-body');
+            let forecastDateElement = $('<h5>').text(forecastDate).css('font-weight', '700');
 
-                let weatherIconForecast = $('<img>').attr('src', iconUrlForecast).attr('alt', 'Weather Icon');
+            let weatherIconForecast = $('<img>').attr('src', iconUrlForecast).attr('alt', 'Weather Icon');
 
-                let forecastTemperatureElement = $('<p>').text('Temp.: ' + forecastTemperatureCelsius.toFixed(2) + '°C');
+            let forecastTemperatureElement = $('<p>').text('Temp.: ' + forecastTemperatureCelsius.toFixed(2) + '°C');
 
-                let forecastWindData = forecastData.wind.speed;
-                let forecastWindElement = $('<p>').text('Wind: ' + forecastWindData + ' KPH');
+            let forecastWindData = forecastData.wind.speed;
+            let forecastWindElement = $('<p>').text('Wind: ' + forecastWindData + ' KPH');
 
-                let forecastHumidityData = forecastData.main.humidity;
-                let forecastHumidityElement = $('<p>').text('Humidity: ' + forecastHumidityData + '%');
+            let forecastHumidityData = forecastData.main.humidity;
+            let forecastHumidityElement = $('<p>').text('Humidity: ' + forecastHumidityData + '%');
 
-                forecastCard.append(forecastDateElement, weatherIconForecast, forecastTemperatureElement, forecastWindElement, forecastHumidityElement);
-                forecastSection.append(forecastCard);
+            forecastCard.append(forecastDateElement, weatherIconForecast, forecastTemperatureElement, forecastWindElement, forecastHumidityElement);
+            forecastSection.append(forecastCard);
 
-                forecastDaysAdded++;
-                nextDay.setDate(nextDay.getDate() + 1);
-            }
+            forecastDaysAdded++;
+            nextDay.setDate(nextDay.getDate() + 1);
         }
     }
+}
 
 // Function to allow user to submit a search using the text input field, linking this with the weather API and calling of the displayWeatherInfo function
     function submitSearch(event) {
