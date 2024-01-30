@@ -9,11 +9,10 @@ $(document).ready(function () {
 
     function loadSavedCities() {
         let savedCities = JSON.parse(localStorage.getItem('savedCities')) || [];
-        savedCities.forEach(city => addCityButton(city.name));
+        savedCities.slice(-5).forEach(city => addCityButton(city.name));
     }
 
     function addCityButton(cityName) {
-        cityName = cityName.charAt(0).toUpperCase() + cityName.slice(1);
         let button = $('<button>').text(cityName).addClass('city-button btn bg-dark-subtle');
 
         if (!cityButtonsContainer.find(`button:contains("${cityName}")`).length) {
@@ -31,7 +30,7 @@ $(document).ready(function () {
         if (!savedCities.some(savedCity => savedCity.name === city)) {
             savedCities.push({ name: city });
             localStorage.setItem('savedCities', JSON.stringify(savedCities));
-            addCityButton(city);
+            addCityButton(city); 
         }
     }
 
@@ -54,8 +53,10 @@ $(document).ready(function () {
 
     function displayWeatherInfo(data) {
         todaySection.empty();
-        cityName = data.city.name;
+        let cityName = data.city.name; 
         console.log(cityName);
+
+        saveCity(cityName);
 
         let currentDate = formatUnixTimestamp(data.list[0].dt);
         let iconCode = data.list[0].weather[0].icon;
@@ -82,49 +83,52 @@ $(document).ready(function () {
         let humidityData = data.list[0].main.humidity;
         let currentHumidity = $('<p>').text('Humidity: ' + humidityData + '%');
         todaySection.append(currentHumidity);
-        
 
-    const forecastTitle = $('<h4>').text("5-day Forecast:").addClass('forecast-title');
-    forecastSection.append(forecastTitle);
+        todaySection.css('border', '1px solid black')
 
-    let forecastDaysAdded = 0;
+        forecastSection.empty();
 
-    const nextDay = new Date(data.list[0].dt * 1000);
-    nextDay.setDate(nextDay.getDate() + 1);
+        const forecastTitle = $('<h4>').text("5-day Forecast:").addClass('forecast-title');
+        forecastSection.append(forecastTitle);
 
-    for (let i = 0; i < data.list.length && forecastDaysAdded < 5; i++) {
-        const forecastData = data.list[i];
-        const forecastDate = formatUnixTimestamp(forecastData.dt);
+        let forecastDaysAdded = 0;
 
-        if (forecastDate === formatUnixTimestamp(nextDay.getTime() / 1000)) {
-            const forecastTemperatureKelvin = forecastData.main.temp;
-            const forecastTemperatureCelsius = kelvinToCelsius(forecastTemperatureKelvin);
+        const nextDay = new Date(data.list[0].dt * 1000);
+        nextDay.setDate(nextDay.getDate() + 1);
 
-            let iconCodeForecast = forecastData.weather[0].icon; 
+        for (let i = 0; i < data.list.length && forecastDaysAdded < 5; i++) {
+            const forecastData = data.list[i];
+            const forecastDate = formatUnixTimestamp(forecastData.dt);
 
-            let iconUrlForecast = `http://openweathermap.org/img/wn/${iconCodeForecast}.png`;
+            if (forecastDate === formatUnixTimestamp(nextDay.getTime() / 1000)) {
+                const forecastTemperatureKelvin = forecastData.main.temp;
+                const forecastTemperatureCelsius = kelvinToCelsius(forecastTemperatureKelvin);
 
-            let forecastCard = $('<div>').addClass('col-md-2 forecast-card card-body');
-            let forecastDateElement = $('<h5>').text(forecastDate).css('font-weight', '700');
+                let iconCodeForecast = forecastData.weather[0].icon;
 
-            let weatherIconForecast = $('<img>').attr('src', iconUrlForecast).attr('alt', 'Weather Icon');
+                let iconUrlForecast = `http://openweathermap.org/img/wn/${iconCodeForecast}.png`;
 
-            let forecastTemperatureElement = $('<p>').text('Temp.: ' + forecastTemperatureCelsius.toFixed(2) + '°C');
+                let forecastCard = $('<div>').addClass('col-md-2 forecast-card card-body');
+                let forecastDateElement = $('<h5>').text(forecastDate).css('font-weight', '700');
 
-            let forecastWindData = forecastData.wind.speed;
-            let forecastWindElement = $('<p>').text('Wind: ' + forecastWindData + ' KPH');
+                let weatherIconForecast = $('<img>').attr('src', iconUrlForecast).attr('alt', 'Weather Icon');
 
-            let forecastHumidityData = forecastData.main.humidity;
-            let forecastHumidityElement = $('<p>').text('Humidity: ' + forecastHumidityData + '%');
+                let forecastTemperatureElement = $('<p>').text('Temp.: ' + forecastTemperatureCelsius.toFixed(2) + '°C');
 
-            forecastCard.append(forecastDateElement, weatherIconForecast, forecastTemperatureElement, forecastWindElement, forecastHumidityElement);
-            forecastSection.append(forecastCard);
+                let forecastWindData = forecastData.wind.speed;
+                let forecastWindElement = $('<p>').text('Wind: ' + forecastWindData + ' KPH');
 
-            forecastDaysAdded++;
-            nextDay.setDate(nextDay.getDate() + 1);
+                let forecastHumidityData = forecastData.main.humidity;
+                let forecastHumidityElement = $('<p>').text('Humidity: ' + forecastHumidityData + '%');
+
+                forecastCard.append(forecastDateElement, weatherIconForecast, forecastTemperatureElement, forecastWindElement, forecastHumidityElement);
+                forecastSection.append(forecastCard);
+
+                forecastDaysAdded++;
+                nextDay.setDate(nextDay.getDate() + 1);
+            }
         }
     }
-}
 
     function submitSearch(event) {
         event.preventDefault();
@@ -141,8 +145,6 @@ $(document).ready(function () {
 
                 displayWeatherInfo(data);
 
-                saveCity(search);
-
                 searchInput.val('');
             })
             .catch(error => {
@@ -154,7 +156,6 @@ $(document).ready(function () {
 
     searchForm.submit(submitSearch);
 
-    // Append the clearHistoryButton and cityButtonsContainer
     historyPanel.append(clearHistoryButton);
     historyPanel.append(cityButtonsContainer);
 

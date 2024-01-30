@@ -27,7 +27,6 @@ h1 {
 /* Top right panel - current weather */
 
 #today {
-    border: 1px solid black;
     height: 190px;
     width: 100%;
     padding: 10px;
