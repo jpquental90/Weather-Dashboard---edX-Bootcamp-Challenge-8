@@ -3,7 +3,7 @@ $(document).ready(function () {
 // Setting variables
     let searchForm = $('#search-form');
     let historyPanel = $('.list-group');
-    let clearHistoryButton = $('<button>').text("Clear history").addClass('clear-button btn bg-dark');
+    let clearHistoryButton = $('<button>').text('Clear history').addClass('clear-button btn bg-dark');
     let cityButtonsContainer = $('<div>').addClass('city-buttons-container');
     let searchInput = $('#search-input');
     let todaySection = $('#today');
@@ -31,7 +31,7 @@ $(document).ready(function () {
     function addCityButton(cityName) {
         let button = $('<button>').text(cityName).addClass('city-button btn bg-dark-subtle');
 
-        if (!cityButtonsContainer.find(`button:contains("${cityName}")`).length) {
+        if (!cityButtonsContainer.find(`button:contains('${cityName}')`).length) {
 
             if (cityButtonsContainer.children().length >= 5) {
                 cityButtonsContainer.children().last().remove();
@@ -71,7 +71,7 @@ $(document).ready(function () {
         return kelvin - 273.15;
     }
 
-// Function to convert the UNIX timestamp into human-readable date string in the format "DD/MM/YYYY"
+// Function to convert the UNIX timestamp into human-readable date string in the format 'DD/MM/YYYY'
     function formatUnixTimestamp(unixTimestamp) {
         let date = new Date(unixTimestamp * 1000);
         let year = date.getFullYear();
@@ -84,7 +84,6 @@ $(document).ready(function () {
     function displayWeatherInfo(data) {
         todaySection.empty();
         let cityName = data.city.name; 
-        console.log(cityName);
 
         saveCity(cityName);
 
@@ -118,7 +117,7 @@ $(document).ready(function () {
 
         forecastSection.empty();
 
-        const forecastTitle = $('<h4>').text("5-day Forecast:").addClass('forecast-title');
+        const forecastTitle = $('<h4>').text('5-day Forecast:').addClass('forecast-title');
         forecastSection.append(forecastTitle);
 
         let forecastDaysAdded = 0;
@@ -164,7 +163,6 @@ $(document).ready(function () {
     function submitSearch(event) {
         event.preventDefault();
         let search = $('#search-input').val().trim();
-        console.log(search);
 
         let weatherKey = 'bf1c320ceaab99952592bf850ff3e6d2';
         let queryURL = 'https://api.openweathermap.org/data/2.5/forecast?q=' + search + '&appid=' + weatherKey;
@@ -172,7 +170,7 @@ $(document).ready(function () {
         fetch(queryURL)
             .then(response => response.json())
             .then(data => {
-                console.log("Weather Data:", data);
+                console.log('Weather Data:', data);
 
                 displayWeatherInfo(data);
 
