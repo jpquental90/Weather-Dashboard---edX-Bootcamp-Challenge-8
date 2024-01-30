@@ -1,4 +1,6 @@
 $(document).ready(function () {
+
+// Setting variables
     let searchForm = $('#search-form');
     let historyPanel = $('.list-group');
     let clearHistoryButton = $('<button>').text("Clear history").addClass('clear-button btn bg-dark');
@@ -7,31 +9,67 @@ $(document).ready(function () {
     let todaySection = $('#today');
     let forecastSection = $('#forecast');
 
-    function loadSavedCities() {
-        let savedCities = JSON.parse(localStorage.getItem('savedCities')) || [];
-        savedCities.slice(-5).forEach(city => addCityButton(city.name));
-    }
+// Function to load saved cities from local storage, no more than 5 in total
+function loadSavedCities() {
+    let savedCities = JSON.parse(localStorage.getItem('savedCities')) || [];
 
-    function addCityButton(cityName) {
-        let button = $('<button>').text(cityName).addClass('city-button btn bg-dark-subtle');
+    // Clear existing buttons
+    cityButtonsContainer.empty();
 
-        if (!cityButtonsContainer.find(`button:contains("${cityName}")`).length) {
-            cityButtonsContainer.append(button);
-            button.on('click', function () {
-                $('#search-input').val(cityName);
-                searchForm.submit();
-            });
+    // Iterate over savedCities in normal order
+    for (let i = 0; i < savedCities.length; i++) {
+        let cityName = savedCities[i].name;
+
+        // Add the button
+        addCityButton(cityName);
+
+        // Check if the number of buttons exceeds 5
+        if (cityButtonsContainer.children().length >= 5) {
+            // Break the loop if 5 buttons are added
+            break;
         }
     }
+}
+
+// Function to generate and add a button with the name of the city
+// Remove the oldest button if more than 5 buttons are present
+function addCityButton(cityName) {
+    let button = $('<button>').text(cityName).addClass('city-button btn bg-dark-subtle');
+
+    // Check if the button already exists
+    if (!cityButtonsContainer.find(`button:contains("${cityName}")`).length) {
+        // Check if the number of buttons exceeds 5
+        if (cityButtonsContainer.children().length >= 5) {
+            // Remove the oldest button
+            cityButtonsContainer.children().last().remove();
+        }
+
+        // Add the new button at the beginning of the list
+        cityButtonsContainer.append(button);
+        button.on('click', function () {
+            $('#search-input').val(cityName);
+            searchForm.submit();
+        });
+    }
+}
 
     function saveCity(city) {
         let savedCities = JSON.parse(localStorage.getItem('savedCities')) || [];
-
-        if (!savedCities.some(savedCity => savedCity.name === city)) {
-            savedCities.push({ name: city });
-            localStorage.setItem('savedCities', JSON.stringify(savedCities));
-            addCityButton(city); 
-        }
+    
+        // Remove any existing instance of the city
+        savedCities = savedCities.filter(savedCity => savedCity.name !== city);
+    
+        // Add the new city at the beginning of the list
+        savedCities.unshift({ name: city });
+    
+        // Limit the list to 5 cities
+        savedCities = savedCities.slice(0, 5);
+    
+        // Update the local storage
+        localStorage.setItem('savedCities', JSON.stringify(savedCities));
+    
+        // Refresh the list of buttons
+        loadSavedCities();
     }
 
     function clearHistory() {
